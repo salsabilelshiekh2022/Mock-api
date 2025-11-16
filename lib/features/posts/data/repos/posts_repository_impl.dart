@@ -26,23 +26,29 @@ class PostsRepositoryImpl implements PostsRepository {
   Future<Either<Failure, List<PostEntity>>> getPosts({
     required int pageNumber,
   }) async {
-    final isConnected = await _networkInfo.isConnected;
-    if (!isConnected && pageNumber == 0) {
-      final cachedPosts = _localDataSource.getPosts(pageNumber: pageNumber);
-      if (cachedPosts.isNotEmpty) {
-        return Right(cachedPosts);
+    try {
+      final isConnected = await _networkInfo.isConnected;
+
+      if (!isConnected && pageNumber == 0) {
+        final cachedPosts = _localDataSource.getPosts();
+        if (cachedPosts.isNotEmpty) {
+          return Right(cachedPosts.map((model) => model.toEntity()).toList());
+        }
+        return Left(ServerFailure(message: 'No Internet connection'));
       }
 
-      return Left(ServerFailure(message: 'No Internet connection'));
-    }
+      final remotePosts = await _remoteDataSource.getPosts(
+        pageNumber: pageNumber,
+      );
 
-    if (!isConnected) {
-      return Left(ServerFailure(message: 'No Internet connection'));
-    }
+      if (pageNumber == 0) {
+        _localDataSource.clearCache();
+        _localDataSource.cachePosts(remotePosts);
+      }
 
-    final remotePosts = await _remoteDataSource.getPosts(
-      pageNumber: pageNumber,
-    );
-    return Right(remotePosts);
+      return Right(remotePosts.map((model) => model.toEntity()).toList());
+    } catch (e) {
+      return Left(ServerFailure(message: 'Failed to fetch posts'));
+    }
   }
 }

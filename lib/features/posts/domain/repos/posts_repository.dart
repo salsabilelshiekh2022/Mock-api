@@ -6,3 +6,4 @@ import '../entities/post.dart';
 abstract class PostsRepository {
   Future<Either<Failure, List<PostEntity>>> getPosts({required int pageNumber});
 }
+

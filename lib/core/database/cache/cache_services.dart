@@ -1,13 +1,14 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
-import 'package:mock_api/features/posts/domain/entities/post.dart';
+
+import '../../../features/posts/data/models/post_model.dart';
 
 abstract class CacheHelper {
   static const String postsBox = 'postsBox';
   static setUpCache() async {
     await Hive.initFlutter();
-    Hive.registerAdapter(ReactionsEntityAdapter());
-    Hive.registerAdapter(PostEntityAdapter());
+    Hive.registerAdapter(ReactionsModelAdapter());
+    Hive.registerAdapter(PostModelAdapter());
     await Future.wait([Hive.openBox(postsBox)]);
   }
 }

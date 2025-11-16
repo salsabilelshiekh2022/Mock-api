@@ -50,10 +50,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i742.ApiConsumer>(
         () => _i1062.DioConsumer(appCacheHelper: gh<_i756.AppCacheHelper>()));
     gh.lazySingleton<_i245.PostsRemoteDataSource>(
-        () => _i245.PostsRemoteDataSourceImpl(
-              gh<_i742.ApiConsumer>(),
-              gh<_i408.CacheServices>(),
-            ));
+        () => _i245.PostsRemoteDataSourceImpl(gh<_i742.ApiConsumer>()));
     gh.lazySingleton<_i1033.PostsRepository>(() => _i1066.PostsRepositoryImpl(
           remoteDataSource: gh<_i245.PostsRemoteDataSource>(),
           localDataSource: gh<_i326.PostsLocalDataSource>(),

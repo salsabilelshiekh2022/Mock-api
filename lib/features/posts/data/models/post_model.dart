@@ -1,32 +1,74 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import '../../domain/entities/post.dart';
 
-class PostModel extends PostEntity {
-  const PostModel({
-    required super.id,
-    required super.title,
-    required super.body,
-    required super.tags,
-    required super.views,
-    required super.userId,
-    required super.reactions,
+part 'post_model.g.dart';
+
+@HiveType(typeId: 0)
+class PostModel {
+  @HiveField(0)
+  final int id;
+
+  @HiveField(1)
+  final String title;
+
+  @HiveField(2)
+  final String body;
+
+  @HiveField(3)
+  final List<String> tags;
+
+  @HiveField(4)
+  final int views;
+
+  @HiveField(5)
+  final int userId;
+
+  @HiveField(6)
+  final ReactionsModel reactions;
+
+  PostModel({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.tags,
+    required this.views,
+    required this.userId,
+    required this.reactions,
   });
 
-  factory PostModel.fromJson(Map<String, dynamic> json) {
-    final reactionsJson = json['reactions'];
+  factory PostModel.fromEntity(PostEntity entity) {
     return PostModel(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      body: json['body'] as String,
-      tags: List<String>.from(json['tags'] as List<dynamic>),
-      views: json['views'] as int? ?? 0,
-      userId: json['userId'] as int? ?? 0,
-      reactions: ReactionsModel.fromJson(
-        Map<String, dynamic>.from(
-          reactionsJson is Map
-              ? reactionsJson
-              : <String, dynamic>{'likes': 0, 'dislikes': 0},
-        ),
-      ),
+      id: entity.id,
+      title: entity.title,
+      body: entity.body,
+      tags: entity.tags,
+      views: entity.views,
+      userId: entity.userId,
+      reactions: ReactionsModel.fromEntity(entity.reactions),
+    );
+  }
+
+  PostEntity toEntity() {
+    return PostEntity(
+      id: id,
+      title: title,
+      body: body,
+      tags: tags,
+      views: views,
+      userId: userId,
+      reactions: reactions.toEntity(),
+    );
+  }
+
+  factory PostModel.fromJson(Map<String, dynamic> json) {
+    return PostModel(
+      id: json['id'],
+      title: json['title'],
+      body: json['body'],
+      tags: List<String>.from(json['tags']),
+      views: json['views'],
+      userId: json['userId'],
+      reactions: ReactionsModel.fromJson(json['reactions']),
     );
   }
 
@@ -38,29 +80,31 @@ class PostModel extends PostEntity {
       'tags': tags,
       'views': views,
       'userId': userId,
-      'reactions': ReactionsModel.fromEntity(reactions).toJson(),
+      'reactions': reactions.toJson(),
     };
-  }
-
-  static List<PostModel> fromJsonList(List<dynamic> list) {
-    return list
-        .map((item) => PostModel.fromJson(Map<String, dynamic>.from(item)))
-        .toList();
   }
 }
 
-class ReactionsModel extends ReactionsEntity {
-  const ReactionsModel({required super.likes, required super.dislikes});
+@HiveType(typeId: 1)
+class ReactionsModel {
+  @HiveField(0)
+  final int likes;
 
-  factory ReactionsModel.fromJson(Map<String, dynamic> json) {
-    return ReactionsModel(
-      likes: json['likes'] as int? ?? 0,
-      dislikes: json['dislikes'] as int? ?? 0,
-    );
-  }
+  @HiveField(1)
+  final int dislikes;
+
+  ReactionsModel({required this.likes, required this.dislikes});
 
   factory ReactionsModel.fromEntity(ReactionsEntity entity) {
     return ReactionsModel(likes: entity.likes, dislikes: entity.dislikes);
+  }
+
+  ReactionsEntity toEntity() {
+    return ReactionsEntity(likes: likes, dislikes: dislikes);
+  }
+
+  factory ReactionsModel.fromJson(Map<String, dynamic> json) {
+    return ReactionsModel(likes: json['likes'], dislikes: json['dislikes']);
   }
 
   Map<String, dynamic> toJson() {

@@ -1,34 +1,34 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'post.dart';
+part of 'post_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PostEntityAdapter extends TypeAdapter<PostEntity> {
+class PostModelAdapter extends TypeAdapter<PostModel> {
   @override
   final int typeId = 0;
 
   @override
-  PostEntity read(BinaryReader reader) {
+  PostModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return PostEntity(
+    return PostModel(
       id: fields[0] as int,
       title: fields[1] as String,
       body: fields[2] as String,
       tags: (fields[3] as List).cast<String>(),
       views: fields[4] as int,
       userId: fields[5] as int,
-      reactions: fields[6] as ReactionsEntity,
+      reactions: fields[6] as ReactionsModel,
     );
   }
 
   @override
-  void write(BinaryWriter writer, PostEntity obj) {
+  void write(BinaryWriter writer, PostModel obj) {
     writer
       ..writeByte(7)
       ..writeByte(0)
@@ -53,29 +53,29 @@ class PostEntityAdapter extends TypeAdapter<PostEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PostEntityAdapter &&
+      other is PostModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
 
-class ReactionsEntityAdapter extends TypeAdapter<ReactionsEntity> {
+class ReactionsModelAdapter extends TypeAdapter<ReactionsModel> {
   @override
   final int typeId = 1;
 
   @override
-  ReactionsEntity read(BinaryReader reader) {
+  ReactionsModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ReactionsEntity(
+    return ReactionsModel(
       likes: fields[0] as int,
       dislikes: fields[1] as int,
     );
   }
 
   @override
-  void write(BinaryWriter writer, ReactionsEntity obj) {
+  void write(BinaryWriter writer, ReactionsModel obj) {
     writer
       ..writeByte(2)
       ..writeByte(0)
@@ -90,7 +90,7 @@ class ReactionsEntityAdapter extends TypeAdapter<ReactionsEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ReactionsEntityAdapter &&
+      other is ReactionsModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
